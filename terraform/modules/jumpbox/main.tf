@@ -124,6 +124,7 @@ resource "azurerm_role_assignment" "vm_admin_login" {
   scope                            = azurerm_linux_virtual_machine.jumpbox.id
   role_definition_name             = "Virtual Machine Administrator Login"
   principal_id                     = var.admin_group_object_id
+  principal_type                   = "Group"
   skip_service_principal_aad_check = true
 }
 
@@ -131,6 +132,7 @@ resource "azurerm_role_assignment" "vm_user_login" {
   scope                            = azurerm_linux_virtual_machine.jumpbox.id
   role_definition_name             = "Virtual Machine User Login"
   principal_id                     = var.dev_group_object_id
+  principal_type                   = "Group"
   skip_service_principal_aad_check = true
 }
 

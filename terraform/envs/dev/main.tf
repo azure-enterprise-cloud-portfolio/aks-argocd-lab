@@ -101,7 +101,7 @@ module "aks" {
   identity_principal_id = module.identity.identity_principal_id
   admin_group_object_id = module.identity.admin_group_object_id
   aks_subnet_id         = module.networking.aks_subnet_id
-  kubernetes_version    = "1.29"
+  kubernetes_version    = "1.35.3"
   system_node_count     = local.system_node_count
   system_vm_size        = local.system_vm_size
   user_node_count       = local.user_node_count
