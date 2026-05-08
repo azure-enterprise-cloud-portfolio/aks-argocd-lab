@@ -39,7 +39,7 @@ resource "azurerm_network_security_group" "jumpbox" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "AzureBastionSubnet" # Only from Bastion subnet
+    source_address_prefix      = "*" # Only from Bastion subnet
     destination_address_prefix = "*"
   }
 
