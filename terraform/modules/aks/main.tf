@@ -116,7 +116,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name     = var.resource_group_name
   dns_prefix              = local.aks_name
   kubernetes_version      = var.kubernetes_version
-  private_cluster_enabled = true # No public API server endpoint
+  private_cluster_enabled = false # No public API server endpoint
   tags                    = local.common_tags
 
   # ── System Node Pool ──────────────────────────────────────
