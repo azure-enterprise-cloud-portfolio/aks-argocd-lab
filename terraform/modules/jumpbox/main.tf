@@ -132,12 +132,12 @@ resource "azurerm_role_assignment" "vm_user_login" {
   role_definition_name             = "Virtual Machine User Login"
   principal_id                     = var.dev_group_object_id
   skip_service_principal_aad_check = true
+}
 
+# Random password — required by Azure when disable_password_authentication = false
+# Never used directly — Entra ID SSH extension handles all authentication
 resource "random_password" "jumpbox" {
   length           = 16
   special          = true
   override_special = "!@#"
 }
-  
-}
-
