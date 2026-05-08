@@ -125,6 +125,7 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
   scope                = module.aks.aks_id
   role_definition_name = "Azure Kubernetes Service RBAC Cluster Admin"
   principal_id         = module.identity.admin_group_object_id
+  principal_type       = "Group"
 
   skip_service_principal_aad_check = true
 
@@ -137,6 +138,7 @@ resource "azurerm_role_assignment" "aks_developer" {
   scope                = module.aks.aks_id
   role_definition_name = "Azure Kubernetes Service RBAC Writer"
   principal_id         = module.identity.developer_group_object_id
+  principal_type       = "Group"
 
   skip_service_principal_aad_check = true
 
