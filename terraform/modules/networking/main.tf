@@ -71,71 +71,11 @@ resource "azurerm_public_ip" "bastion" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"   # Required for Bastion
   sku                 = "Standard" # Required for Bastion
+  tunneling_enabled   = true       # Required for native client SSH
   tags                = local.common_tags
 }
 
 # ── Azure Bastion Host ────────────────────────────────────────
 # Provides browser-based SSH/RDP over HTTPS — no open SSH port needed.
 # Eliminates the need for public IPs on the jumpbox entirely.
-# Access: Azure Portal → Bastion → Connect to jumpbox privately.
-resource "azurerm_bastion_host" "bastion" {
-  name                = local.bastion_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  tags                = local.common_tags
-
-  ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.bastion.id
-    public_ip_address_id = azurerm_public_ip.bastion.id
-  }
-}
-
-# ── NSG for AKS Subnet ────────────────────────────────────────
-# Subnet-level firewall — first layer of defence.
-# Default posture: deny all inbound traffic.
-# Pod-to-pod and node-to-node traffic is governed separately
-# by Kubernetes NetworkPolicies (defined in Helm charts).
-resource "azurerm_network_security_group" "aks" {
-  name                = local.nsg_aks_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  tags                = local.common_tags
-
-  # Allow HTTPS — required for AKS control plane communication
-  # and for ingress controller to serve traffic.
-  security_rule {
-    name                       = "allow-https-inbound"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  # Explicit deny-all — defence in depth.
-  # Azure has an implicit deny-all at priority 65500,
-  # but being explicit makes security intent clear in code reviews.
-  security_rule {
-    name                       = "deny-all-inbound"
-    priority                   = 4096 # Lowest custom priority = evaluated last
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
-
-# ── NSG Association ───────────────────────────────────────────
-# Binds the NSG to the AKS subnet.
-# Without this the NSG exists but has no effect on traffic.
-resource "azurerm_subnet_network_security_group_association" "aks" {
-  subnet_id                 = azurerm_subnet.aks.id
-  network_security_group_id = azurerm_network_security_group.aks.id
-}
+# Access: Azure Portal → Bastion → Connect to jump
