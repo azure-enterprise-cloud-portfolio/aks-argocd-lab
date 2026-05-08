@@ -77,6 +77,7 @@ resource "azurerm_linux_virtual_machine" "jumpbox" {
   size                            = var.vm_size
   admin_username                  = var.admin_username
   disable_password_authentication = false
+  admin_password                  = random_password.jumpbox.result
   tags                            = local.common_tags
 
   network_interface_ids = [
@@ -131,5 +132,12 @@ resource "azurerm_role_assignment" "vm_user_login" {
   role_definition_name             = "Virtual Machine User Login"
   principal_id                     = var.dev_group_object_id
   skip_service_principal_aad_check = true
+
+resource "random_password" "jumpbox" {
+  length           = 16
+  special          = true
+  override_special = "!@#"
+}
+  
 }
 
