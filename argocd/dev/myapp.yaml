@@ -1,0 +1,38 @@
+# =============================================================================
+# ArgoCD Application — myapp (Dev)
+#
+# Deploys the myapp Helm chart from the same Git repo.
+# Auto-syncs on every Git push — no manual deployment needed.
+#
+# GitOps workflow:
+#   1. Developer pushes change to helm/myapp/
+#   2. ArgoCD detects diff within 3 minutes
+#   3. ArgoCD applies changes automatically
+#   4. Rollback: git revert + push → ArgoCD reverts automatically
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-dev
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/azure-enterprise-cloud-portfolio/aks-argocd-lab.git
+    targetRevision: main
+    path: helm/myapp
+    helm:
+      # Use dev-specific values
+      valueFiles:
+      - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp
+  syncPolicy:
+    automated:
+      prune: true     # Remove resources deleted from Git
+      selfHeal: true  # Revert any manual kubectl changes
+    syncOptions:
+    - CreateNamespace=true  # Auto-create myapp namespace

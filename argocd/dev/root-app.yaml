@@ -1,0 +1,34 @@
+# =============================================================================
+# ArgoCD Root Application — Dev Environment
+#
+# App-of-Apps pattern:
+#   This single application manages all child applications.
+#   Deploying this one manifest bootstraps the entire platform.
+#
+# Usage:
+#   kubectl apply -f argocd/dev/root-app.yaml
+#   ArgoCD will discover and deploy all child apps automatically.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app-dev
+  namespace: argocd
+  # Finalizer ensures child apps are deleted when root app is deleted
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/azure-enterprise-cloud-portfolio/aks-argocd-lab.git
+    targetRevision: main
+    path: argocd/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true      # Remove resources deleted from Git
+      selfHeal: true   # Revert manual kubectl changes
+    syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,20 @@
+# =============================================================================
+# Service — myapp
+# ClusterIP service — internal only, no external exposure.
+# Traffic reaches pods via ArgoCD-managed ingress or port-forward for demo.
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    managed-by: argocd
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
