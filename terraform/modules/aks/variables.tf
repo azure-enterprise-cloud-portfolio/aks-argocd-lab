@@ -84,7 +84,7 @@ variable "aks_subnet_id" {
 variable "kubernetes_version" {
   description = "Kubernetes version for AKS cluster and node pools"
   type        = string
-  default     = "1.29"
+  default     = "1.35.3"
 }
 
 variable "system_node_count" {
