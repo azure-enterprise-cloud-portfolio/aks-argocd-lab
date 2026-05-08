@@ -27,6 +27,8 @@ output "acr_name" {
   value       = azurerm_container_registry.acr.name
 }
 
+# Temporarily disabled with Key Vault
+/*
 output "key_vault_name" {
   description = "Name of the Key Vault — used in SecretProviderClass manifests"
   value       = azurerm_key_vault.kv.name
@@ -36,6 +38,7 @@ output "key_vault_uri" {
   description = "URI of the Key Vault"
   value       = azurerm_key_vault.kv.vault_uri
 }
+*/
 
 output "log_analytics_workspace_id" {
   description = "Resource ID of the Log Analytics Workspace"

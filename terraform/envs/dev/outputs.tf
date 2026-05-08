@@ -21,10 +21,10 @@ output "acr_login_server" {
   value       = module.aks.acr_login_server
 }
 
-output "key_vault_name" {
-  description = "Key Vault name — use in SecretProviderClass manifests"
-  value       = module.aks.key_vault_name
-}
+# output "key_vault_name" {
+#   description = "Key Vault name — use in SecretProviderClass manifests"
+#   value       = module.aks.key_vault_name
+# }
 
 output "jumpbox_private_ip" {
   description = "Private IP of the jumpbox VM"

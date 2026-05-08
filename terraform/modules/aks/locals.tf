@@ -20,7 +20,7 @@ locals {
   aks_name = "${local.name_prefix}-aks"
   acr_name = "${replace(local.name_prefix, "-", "")}acr" # ACR allows no hyphens
   law_name = "${local.name_prefix}-law"
-  kv_name  = "${local.name_prefix}-kv"
+  # kv_name = "${local.name_prefix}-kv"  # temporarily disabled
 
   # ── Node Pool Settings ────────────────────────────────────
   # System pool: reserved for kube-system pods only

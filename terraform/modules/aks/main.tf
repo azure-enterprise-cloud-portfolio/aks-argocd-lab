@@ -1,3 +1,4 @@
+
 # ============================================================
 # AKS Module - Main
 #
@@ -19,7 +20,6 @@
 #   - Managed Identity: no passwords or service principal keys
 # ============================================================
 
-data "azurerm_client_config" "current" {}
 
 # ── Log Analytics Workspace ───────────────────────────────────
 # Collects cluster logs, metrics, and container insights.
@@ -63,6 +63,7 @@ resource "azurerm_role_assignment" "acr_pull" {
 # Stores secrets that pods consume via the CSI Secrets Store driver.
 # Secrets are mounted as files — never stored as K8s secrets.
 # Access policy: only the Managed Identity can read secrets.
+/*
 resource "azurerm_key_vault" "kv" {
   name                       = local.kv_name
   location                   = var.location
@@ -103,6 +104,8 @@ resource "azurerm_key_vault_secret" "db_password" {
 
   depends_on = [azurerm_key_vault.kv]
 }
+
+*/
 
 # ── AKS Cluster ───────────────────────────────────────────────
 # Private cluster: API server is only reachable inside the VNet.
