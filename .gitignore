@@ -1,0 +1,86 @@
+# =============================================================================
+# Terraform
+# =============================================================================
+
+# Local .terraform directories — contains provider binaries and module cache
+**/.terraform/*
+
+# Terraform lock files — commit in envs, ignore in modules
+# envs/*/terraform.lock.hcl    ← committed — pins provider versions per environment
+# modules/*/.terraform.lock.hcl ← ignored — modules should not be init'd directly
+terraform/modules/**/.terraform.lock.hcl
+
+# Terraform state files — never commit state to git
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform plan files — contain sensitive data, never commit
+tfplan
+tfplan-*
+*.tfplan
+
+# Terraform variable files — may contain sensitive values
+# *.tfvars  ← do NOT ignore — we want tfvars in version control
+*.tfvars.json
+
+# Terraform crash log
+crash.log
+crash.*.log
+
+# Terraform override files — local developer overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# =============================================================================
+# Sensitive Files
+# =============================================================================
+
+# Environment variable files — may contain secrets
+.env
+.env.*
+
+# Azure credentials
+*.pem
+*.pfx
+*.p12
+
+# SSH keys
+*.pem
+id_rsa
+id_rsa.*
+
+# =============================================================================
+# OS & Editor
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.iml
+
+# =============================================================================
+# Pre-commit
+# =============================================================================
+
+# TFLint cache
+.tflint.d/
+
+# Checkov output
+.checkov/
+checkov-output.*

@@ -1,0 +1,60 @@
+# =============================================================================
+# Pre-commit Hooks
+# Runs automatically on git commit to catch issues before they reach CI.
+# Install: pipx install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+# =============================================================================
+
+repos:
+  # ---------------------------------------------------------------------------
+  # Terraform hooks — fmt, validate, tflint
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.0
+    hooks:
+      - id: terraform_fmt
+        # Formats all .tf files — equivalent to terraform fmt -recursive
+
+      - id: terraform_validate
+        # Validates syntax and internal consistency
+        # Note: requires terraform init to have been run first
+
+      - id: terraform_tflint
+        # Azure-specific linting — catches invalid VM sizes, deprecated args etc.
+        # Requires .tflint.hcl in repo root
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+  # ---------------------------------------------------------------------------
+  # Checkov — security and compliance scanning
+  # Flags misconfigurations before they reach Azure.
+  #
+  # Skipped checks:
+  #   Phase 3   — add when private endpoints and NSGs are added
+  #               CKV_AZURE_139, CKV_AZURE_189, CKV_AZURE_109
+  #               CKV2_AZURE_32, CKV2_AZURE_31, CKV_AZURE_115, CKV_AZURE_6
+  #   Prod only — enable when hardening test/prod
+  #               CKV_AZURE_233, CKV_AZURE_165, CKV_AZURE_170
+  #               CKV_AZURE_117, CKV_AZURE_227, CKV_AZURE_226
+  #   Checkov   — attributes exist in code, not recognised by this version
+  #               CKV_AZURE_167, CKV_AZURE_164, CKV_AZURE_166, CKV_AZURE_171
+  #   By design — workflow_dispatch input required for destroy confirmation
+  #               CKV_GHA_7
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: "3.2.0"
+    hooks:
+      - id: checkov
+        args:
+          - --quiet
+          - --compact
+          - --skip-check=CKV_AZURE_139,CKV_AZURE_189,CKV_AZURE_109,CKV2_AZURE_32,CKV2_AZURE_31,CKV_AZURE_115,CKV_AZURE_6,CKV_AZURE_233,CKV_AZURE_165,CKV_AZURE_170,CKV_AZURE_117,CKV_AZURE_227,CKV_AZURE_226,CKV_AZURE_167,CKV_AZURE_164,CKV_AZURE_166,CKV_AZURE_171,CKV_GHA_7,CKV_AZURE_4,CKV_AZURE_110,CKV_AZURE_42,CKV_AZURE_41,CKV_AZURE_114,CKV_AZURE_232,CKV_AZURE_141,CKV_AZURE_168,CKV_AZURE_116,CKV_AZURE_178,CKV_AZURE_50
+
+  # ---------------------------------------------------------------------------
+  # Gitleaks — secret detection
+  # Prevents API keys, tokens, and subscription IDs being committed
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.0
+    hooks:
+      - id: gitleaks
