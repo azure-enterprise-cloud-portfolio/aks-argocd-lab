@@ -81,3 +81,13 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "admin_group_object_id" {
+  description = "Object ID of AKS Admin group — gets VM Administrator Login on jumpbox"
+  type        = string
+}
+
+variable "dev_group_object_id" {
+  description = "Object ID of AKS Developer group — gets VM User Login on jumpbox"
+  type        = string
+}
